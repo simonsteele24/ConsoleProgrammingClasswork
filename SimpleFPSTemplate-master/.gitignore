@@ -53,6 +53,10 @@ SourceArt/**/*.tga
 # Builds
 Build/*
 
+# Binaries
+SimpleFPSTemplate-master/Binaries/
+
+
 # Whitelist PakBlacklist-<BuildConfiguration>.txt files
 !Build/*/
 Build/*/**

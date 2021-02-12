@@ -39,6 +39,21 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
+		//Gets the other actors scale of the component in world space then multiplies it less than 1
+		FVector scale = OtherComp->GetComponentScale();
+		scale *= 0.8f;
+
+		//Either it will destroy if it gets too small or if it isn't too small, then set the scale
+		if (scale.GetMin() < 0.5f)
+			OtherActor->Destroy();
+		else
+			OtherComp->SetWorldScale3D(scale);
+
+		UMaterialInstanceDynamic* matInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
+
+		if (matInst)
+			matInst->SetVectorParameterValue("Color", FLinearColor::MakeRandomColor());
+
 		Destroy();
 	}
 }

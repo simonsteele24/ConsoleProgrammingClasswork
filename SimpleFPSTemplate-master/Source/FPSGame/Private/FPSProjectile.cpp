@@ -3,6 +3,7 @@
 #include "FPSProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Engine/StaticMeshActor.h"
 
 AFPSProjectile::AFPSProjectile() 
 {
@@ -44,15 +45,56 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		scale *= 0.8f;
 
 		//Either it will destroy if it gets too small or if it isn't too small, then set the scale
-		if (scale.GetMin() < 0.5f)
+		/*if (scale.GetMin() < 0.5f)
 			OtherActor->Destroy();
 		else
-			OtherComp->SetWorldScale3D(scale);
+			OtherComp->SetWorldScale3D(scale);*/
 
-		UMaterialInstanceDynamic* matInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
+		FActorSpawnParameters SpawnInfo;
+
+		AStaticMeshActor* baseActor = Cast<AStaticMeshActor>(OtherActor);
+
+		UStaticMesh* newMesh = baseActor->GetStaticMeshComponent()->GetStaticMesh();
+		FRotator Rotation = baseActor->GetActorRotation();
+		FVector baseLocation = baseActor->GetActorLocation();
+		FVector pieceLocation = FVector(0,0,0);
+		FVector baseScale = baseActor->GetActorScale3D() / 4;
+
+		OtherActor->Destroy();
+
+		for (int i = 0; i < 4; i++) 
+		{
+			switch (i)
+			{
+			case 0:
+				pieceLocation = FVector(baseLocation.X + baseScale.X, baseLocation.Y + baseScale.Y, baseLocation.Z);
+				break;
+			case 1:
+				pieceLocation = FVector(baseLocation.X + baseScale.X, baseLocation.Y - baseScale.Y, baseLocation.Z);
+				break;
+			case 2:
+				pieceLocation = FVector(baseLocation.X - baseScale.X, baseLocation.Y + baseScale.Y, baseLocation.Z);
+				break;
+			case 3:
+				pieceLocation = FVector(baseLocation.X - baseScale.X, baseLocation.Y - baseScale.Y, baseLocation.Z);
+				break;
+			default:
+				break;
+			}
+
+			AStaticMeshActor* newActor = GetWorld()->SpawnActor<AStaticMeshActor>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
+			newActor->SetActorScale3D(baseScale);
+			newActor->SetMobility(EComponentMobility::Movable);
+			newActor->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			newActor->GetStaticMeshComponent()->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
+			newActor->GetStaticMeshComponent()->SetSimulatePhysics(true);
+			newActor->GetStaticMeshComponent()->SetStaticMesh(newMesh);
+		}
+
+		/*UMaterialInstanceDynamic* matInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
 
 		if (matInst)
-			matInst->SetVectorParameterValue("Color", FLinearColor::MakeRandomColor());
+			matInst->SetVectorParameterValue("Color", FLinearColor::MakeRandomColor());*/
 
 		Destroy();
 	}

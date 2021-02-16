@@ -51,7 +51,7 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		scale *= 0.8f;
 
 		//Either it will destroy if it gets too small or it will split into smaller chunks
-		if (scale.GetMin() < 0.5f)
+		if (scale.GetMin() < 0.99f)
 			Explode(OtherActor);
 		else
 		{
@@ -64,7 +64,7 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 			FRotator Rotation = baseActor->GetActorRotation();
 			FVector baseLocation = baseActor->GetActorLocation();
 			FVector pieceLocation = FVector(0, 0, 0);
-			FVector baseScale = baseActor->GetActorScale3D() / 4;
+			FVector baseScale = baseActor->GetActorScale3D() * .25;
 
 			OtherActor->Destroy();
 

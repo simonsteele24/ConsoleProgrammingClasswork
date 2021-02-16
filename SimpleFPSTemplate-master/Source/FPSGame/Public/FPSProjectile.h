@@ -34,6 +34,15 @@ public:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	/** called when projectile hits the small cube*/
+	UFUNCTION()
+	void Explode(AActor* otherActor);
+
+	/** Used to determine what special effects to apply when object should explode*/
+	UPROPERTY(EditDefaultsOnly, Category = "Boom")
+	UParticleSystem* explosionTemplate;
+
+
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 

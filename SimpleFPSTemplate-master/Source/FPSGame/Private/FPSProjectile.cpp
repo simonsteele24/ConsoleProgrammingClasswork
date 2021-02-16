@@ -3,6 +3,7 @@
 #include "FPSProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine/StaticMeshActor.h"
 
 AFPSProjectile::AFPSProjectile() 
@@ -32,6 +33,11 @@ AFPSProjectile::AFPSProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
+void AFPSProjectile::Explode(AActor* otherActor)
+{
+	UGameplayStatics::SpawnEmitterAtLocation(this, explosionTemplate, GetActorLocation());
+	otherActor->Destroy();
+}
 
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -44,58 +50,62 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		FVector scale = OtherComp->GetComponentScale();
 		scale *= 0.8f;
 
-		//Either it will destroy if it gets too small or if it isn't too small, then set the scale
-		/*if (scale.GetMin() < 0.5f)
-			OtherActor->Destroy();
+		//Either it will destroy if it gets too small or it will split into smaller chunks
+		if (scale.GetMin() < 0.5f)
+			Explode(OtherActor);
 		else
-			OtherComp->SetWorldScale3D(scale);*/
-
-		FActorSpawnParameters SpawnInfo;
-
-		AStaticMeshActor* baseActor = Cast<AStaticMeshActor>(OtherActor);
-
-		UStaticMesh* newMesh = baseActor->GetStaticMeshComponent()->GetStaticMesh();
-		FRotator Rotation = baseActor->GetActorRotation();
-		FVector baseLocation = baseActor->GetActorLocation();
-		FVector pieceLocation = FVector(0,0,0);
-		FVector baseScale = baseActor->GetActorScale3D() / 4;
-
-		OtherActor->Destroy();
-
-		for (int i = 0; i < 4; i++) 
 		{
-			switch (i)
-			{
-			case 0:
-				pieceLocation = FVector(baseLocation.X + baseScale.X, baseLocation.Y + baseScale.Y, baseLocation.Z);
-				break;
-			case 1:
-				pieceLocation = FVector(baseLocation.X + baseScale.X, baseLocation.Y - baseScale.Y, baseLocation.Z);
-				break;
-			case 2:
-				pieceLocation = FVector(baseLocation.X - baseScale.X, baseLocation.Y + baseScale.Y, baseLocation.Z);
-				break;
-			case 3:
-				pieceLocation = FVector(baseLocation.X - baseScale.X, baseLocation.Y - baseScale.Y, baseLocation.Z);
-				break;
-			default:
-				break;
-			}
 
-			AStaticMeshActor* newActor = GetWorld()->SpawnActor<AStaticMeshActor>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
-			newActor->SetActorScale3D(baseScale);
-			newActor->SetMobility(EComponentMobility::Movable);
-			newActor->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-			newActor->GetStaticMeshComponent()->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
-			newActor->GetStaticMeshComponent()->SetSimulatePhysics(true);
-			newActor->GetStaticMeshComponent()->SetStaticMesh(newMesh);
+			FActorSpawnParameters SpawnInfo;
+
+			AStaticMeshActor* baseActor = Cast<AStaticMeshActor>(OtherActor);
+
+			UStaticMesh* newMesh = baseActor->GetStaticMeshComponent()->GetStaticMesh();
+			FRotator Rotation = baseActor->GetActorRotation();
+			FVector baseLocation = baseActor->GetActorLocation();
+			FVector pieceLocation = FVector(0, 0, 0);
+			FVector baseScale = baseActor->GetActorScale3D() / 4;
+
+			OtherActor->Destroy();
+
+			for (int i = 0; i < 4; i++)
+			{
+				switch (i)
+				{
+				case 0:
+					pieceLocation = FVector(baseLocation.X + baseScale.X, baseLocation.Y + baseScale.Y, baseLocation.Z);
+					break;
+				case 1:
+					pieceLocation = FVector(baseLocation.X + baseScale.X, baseLocation.Y - baseScale.Y, baseLocation.Z);
+					break;
+				case 2:
+					pieceLocation = FVector(baseLocation.X - baseScale.X, baseLocation.Y + baseScale.Y, baseLocation.Z);
+					break;
+				case 3:
+					pieceLocation = FVector(baseLocation.X - baseScale.X, baseLocation.Y - baseScale.Y, baseLocation.Z);
+					break;
+				default:
+					break;
+				}
+
+				AStaticMeshActor* newActor = GetWorld()->SpawnActor<AStaticMeshActor>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
+				newActor->SetActorScale3D(baseScale);
+				newActor->SetMobility(EComponentMobility::Movable);
+				newActor->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				newActor->GetStaticMeshComponent()->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
+				newActor->GetStaticMeshComponent()->SetSimulatePhysics(true);
+				newActor->GetStaticMeshComponent()->SetStaticMesh(newMesh);
+			}
 		}
+			///OtherComp->SetWorldScale3D(scale);
+
 
 		/*UMaterialInstanceDynamic* matInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
 
 		if (matInst)
 			matInst->SetVectorParameterValue("Color", FLinearColor::MakeRandomColor());*/
 
+		//Destroy Projectile at the end
 		Destroy();
 	}
 }

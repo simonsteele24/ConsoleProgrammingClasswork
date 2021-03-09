@@ -42,6 +42,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Boom")
 	UParticleSystem* explosionTemplate;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Boom")
+	float ExplosionSizeMinimum;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Boom")
+	float ExplosionSizeMaximum;
 
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }

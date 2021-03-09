@@ -4,6 +4,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Engine/StaticMeshActor.h"
 
 AFPSProjectile::AFPSProjectile() 
@@ -35,7 +36,9 @@ AFPSProjectile::AFPSProjectile()
 
 void AFPSProjectile::Explode(AActor* otherActor)
 {
-	UGameplayStatics::SpawnEmitterAtLocation(this, explosionTemplate, GetActorLocation());
+	float randomScale = FMath::RandRange(ExplosionSizeMinimum, ExplosionSizeMaximum);
+	UParticleSystemComponent * ps = UGameplayStatics::SpawnEmitterAtLocation(this, explosionTemplate, GetActorLocation());
+	ps->SetWorldScale3D(FVector(randomScale));
 	otherActor->Destroy();
 }
 

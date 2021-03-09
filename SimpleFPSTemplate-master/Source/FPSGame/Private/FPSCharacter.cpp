@@ -158,7 +158,6 @@ void AFPSCharacter::ActivateDestructionSequence()
 		if (ActorsToDestroy[i] != nullptr) 
 		{
 			randomScale = FMath::RandRange(1.0f, 10.0f);
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::SanitizeFloat(randomScale));
 			ActorsToDestroy[i]->SetActorHiddenInGame(true);
 			PlayExplosionEffect(randomScale, ActorsToDestroy[i]->GetActorLocation());
 		}

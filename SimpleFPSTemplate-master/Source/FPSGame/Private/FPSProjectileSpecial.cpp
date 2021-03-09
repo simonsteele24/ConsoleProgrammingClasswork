@@ -2,6 +2,7 @@
 
 
 #include "FPSProjectileSpecial.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -24,7 +25,9 @@ void AFPSProjectileSpecial::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 		{
 			if (FVector::Distance(baseActor->GetActorLocation(), result[i]->GetActorLocation()) <= ExplosionRadius) 
 			{
-				UGameplayStatics::SpawnEmitterAtLocation(this, explosionTemplate, result[i]->GetActorLocation());
+				float randomScale = FMath::RandRange(ExplosionSizeMinimum, ExplosionSizeMaximum);
+				UParticleSystemComponent * ps = UGameplayStatics::SpawnEmitterAtLocation(this, explosionTemplate, result[i]->GetActorLocation());
+				ps->SetWorldScale3D(FVector(randomScale));
 				result[i]->Destroy();
 			}
 		}

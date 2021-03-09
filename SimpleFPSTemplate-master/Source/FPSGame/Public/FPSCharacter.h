@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Custom", meta = (AllowPrivateAccess = "true"))
+	TArray<class AActor*> ActorsToDestroy;
+
 public:
 	AFPSCharacter();
 
@@ -56,11 +59,23 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	UAnimSequence* FireAnimation;
 
+	/* Particle System to represent the explosion effect */
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
+	class UParticleSystem* ExplosionEffect;
+
 	UPROPERTY(EditAnywhere)
 	float FireCooldown = 2.0f;
 
+	void PlayExplosionEffect(float _Scale, const FVector& Location);
+
 protected:
 	
+	// When I press right button
+	UFUNCTION() void BeginDestructionSequence();
+
+	// Iterate over array and explode them at different sizes
+	UFUNCTION() void ActivateDestructionSequence();
+
 	/** Fires a projectile. */
 	void Fire();
 

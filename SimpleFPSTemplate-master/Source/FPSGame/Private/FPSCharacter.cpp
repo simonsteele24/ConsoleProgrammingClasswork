@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Animation/AnimSequence.h"
 
 
@@ -41,6 +42,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
 	PlayerInputComponent->BindAction("Special", IE_Released, this, &AFPSCharacter::SpawnSpecial);
 	PlayerInputComponent->BindAction("SpawnBomb", IE_Pressed, this, &AFPSCharacter::SpawnBomb);
+
+	PlayerInputComponent->BindAction("TimerDelegate", IE_Pressed, this, &AFPSCharacter::BeginDestructionSequence);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
@@ -141,4 +144,51 @@ void AFPSCharacter::StopCooldown()
 {
 	bCanFireSpecial = true;
 	GetWorldTimerManager().ClearTimer(MemberTimerHandle);
+}
+
+
+void AFPSCharacter::ActivateDestructionSequence() 
+{
+	if (ActorsToDestroy.Num() == 0) return;
+
+	float randomScale = 0;
+
+	for (int i = 0; i < ActorsToDestroy.Num(); i++) 
+	{
+		if (ActorsToDestroy[i] != nullptr) 
+		{
+			randomScale = FMath::RandRange(1.0f, 10.0f);
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::SanitizeFloat(randomScale));
+			ActorsToDestroy[i]->SetActorHiddenInGame(true);
+			PlayExplosionEffect(randomScale, ActorsToDestroy[i]->GetActorLocation());
+		}
+	}
+}
+
+
+void AFPSCharacter::BeginDestructionSequence() 
+{
+	FTimerHandle timer;
+	FTimerDelegate timerDelegate;
+	timerDelegate.BindUFunction(this, FName("ActivateDestructionSequence"));
+
+	UWorld* const world = GetWorld();
+
+	if (world != nullptr) 
+	{
+		world->GetTimerManager().SetTimer(timer, timerDelegate, 3.0f, false);
+	}
+}
+
+
+void AFPSCharacter::PlayExplosionEffect(float _Scale, const FVector & Location) 
+{
+	if (ExplosionEffect != nullptr) 
+	{
+		UParticleSystemComponent * ps = UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionEffect, Location);
+		if (ps != nullptr) 
+		{
+			ps->SetWorldScale3D(FVector(_Scale));
+		}
+	}
 }

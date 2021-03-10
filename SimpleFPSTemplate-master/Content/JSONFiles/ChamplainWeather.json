@@ -1,0 +1,94 @@
+{
+    "@context": [
+        "https://geojson.org/geojson-ld/geojson-context.jsonld",
+        {
+            "@version": "1.1",
+            "wx": "https://api.weather.gov/ontology#",
+            "s": "https://schema.org/",
+            "geo": "http://www.opengis.net/ont/geosparql#",
+            "unit": "http://codes.wmo.int/common/unit/",
+            "@vocab": "https://api.weather.gov/ontology#",
+            "geometry": {
+                "@id": "s:GeoCoordinates",
+                "@type": "geo:wktLiteral"
+            },
+            "city": "s:addressLocality",
+            "state": "s:addressRegion",
+            "distance": {
+                "@id": "s:Distance",
+                "@type": "s:QuantitativeValue"
+            },
+            "bearing": {
+                "@type": "s:QuantitativeValue"
+            },
+            "value": {
+                "@id": "s:value"
+            },
+            "unitCode": {
+                "@id": "s:unitCode",
+                "@type": "@id"
+            },
+            "forecastOffice": {
+                "@type": "@id"
+            },
+            "forecastGridData": {
+                "@type": "@id"
+            },
+            "publicZone": {
+                "@type": "@id"
+            },
+            "county": {
+                "@type": "@id"
+            }
+        }
+    ],
+    "id": "https://api.weather.gov/points/44.4731,-73.2041",
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.204099999999997,
+            44.473100000000002
+        ]
+    },
+    "properties": {
+        "@id": "https://api.weather.gov/points/44.4731,-73.2041",
+        "@type": "wx:Point",
+        "cwa": "BTV",
+        "forecastOffice": "https://api.weather.gov/offices/BTV",
+        "gridId": "BTV",
+        "gridX": 88,
+        "gridY": 56,
+        "forecast": "https://api.weather.gov/gridpoints/BTV/88,56/forecast",
+        "forecastHourly": "https://api.weather.gov/gridpoints/BTV/88,56/forecast/hourly",
+        "forecastGridData": "https://api.weather.gov/gridpoints/BTV/88,56",
+        "observationStations": "https://api.weather.gov/gridpoints/BTV/88,56/stations",
+        "relativeLocation": {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -73.1848569,
+                    44.495587
+                ]
+            },
+            "properties": {
+                "city": "Winooski",
+                "state": "VT",
+                "distance": {
+                    "value": 2929.6181589142998,
+                    "unitCode": "unit:m"
+                },
+                "bearing": {
+                    "value": 211,
+                    "unitCode": "unit:degrees_true"
+                }
+            }
+        },
+        "forecastZone": "https://api.weather.gov/zones/forecast/VTZ005",
+        "county": "https://api.weather.gov/zones/county/VTC007",
+        "fireWeatherZone": "https://api.weather.gov/zones/fire/VTZ005",
+        "timeZone": "America/New_York",
+        "radarStation": "KCXX"
+    }
+}

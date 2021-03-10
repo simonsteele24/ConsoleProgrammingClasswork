@@ -5,7 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
-#include "Engine/StaticMeshActor.h"
+#include "Cube.h"
 
 AFPSProjectile::AFPSProjectile() 
 {
@@ -61,7 +61,7 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 
 			FActorSpawnParameters SpawnInfo;
 
-			AStaticMeshActor* baseActor = Cast<AStaticMeshActor>(OtherActor);
+			ACube* baseActor = Cast<ACube>(OtherActor);
 
 			UStaticMesh* newMesh = baseActor->GetStaticMeshComponent()->GetStaticMesh();
 			FRotator Rotation = baseActor->GetActorRotation();
@@ -91,13 +91,14 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 					break;
 				}
 
-				AStaticMeshActor* newActor = GetWorld()->SpawnActor<AStaticMeshActor>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
+				ACube* newActor = GetWorld()->SpawnActor<ACube>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
 				newActor->SetActorScale3D(baseScale);
 				newActor->SetMobility(EComponentMobility::Movable);
 				newActor->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 				newActor->GetStaticMeshComponent()->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
 				newActor->GetStaticMeshComponent()->SetSimulatePhysics(true);
 				newActor->GetStaticMeshComponent()->SetStaticMesh(newMesh);
+				newActor->GetStaticMeshComponent()->SetMaterial(0, newActor->SmallMaterial);
 			}
 		}
 			///OtherComp->SetWorldScale3D(scale);

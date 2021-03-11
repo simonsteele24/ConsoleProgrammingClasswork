@@ -30,8 +30,11 @@ public:
 	//Make the API request
 	UFUNCTION()
 	void HttpCall();
+	UFUNCTION()
+		void HttpCallURL(FString url);
 
 	void OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful);
+	void OnResponseReceivedForeCast(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful);
 
 	void ParseExample();
 };

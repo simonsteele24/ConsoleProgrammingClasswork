@@ -18,7 +18,6 @@ void AJSONActor::BeginPlay()
 
 	Super::BeginPlay();
     HttpCall();
-    HttpCall();
   //  ParseExample();
 }
 
@@ -34,23 +33,11 @@ void AJSONActor::HttpCall()
     TSharedRef<IHttpRequest, ESPMode::ThreadSafe> request = Http->CreateRequest();
     request->OnProcessRequestComplete().BindUObject(this, &AJSONActor::OnResponseReceived);
 
-    if (url.IsEmpty())
-    {
-        request->SetURL("https://api.weather.gov/points/44.4731,-73.2041");
-        request->SetVerb("GET");
-        request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
-        request->SetHeader("Content-Type", TEXT("application/json"));
-        request->ProcessRequest();
-    }
-    else
-    {
-    request->SetURL(url);
+    request->SetURL("https://api.weather.gov/points/44.4731,-73.2041");
     request->SetVerb("GET");
     request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
     request->SetHeader("Content-Type", TEXT("application/json"));
     request->ProcessRequest();
-    }
-
 }
 
 void AJSONActor::OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful)
@@ -58,35 +45,33 @@ void AJSONActor::OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr re
     TSharedPtr<FJsonObject> JsonObject;
     TSharedRef<TJsonReader<TCHAR>> Reader = TJsonReaderFactory<>::Create(response->GetContentAsString());
 
-    TSharedPtr<FJsonObject> JsonObject2;
-    if (url.IsEmpty())
+    if (FJsonSerializer::Deserialize(Reader, JsonObject))
     {
-        if (FJsonSerializer::Deserialize(Reader, JsonObject))
-        {
-            //The person "object" that is retrieved from the given json file
-            TSharedPtr<FJsonObject> PersonObject = JsonObject->GetObjectField("properties");
-            // Reader = TJsonReaderFactory<>::Create(PersonObject->GetStringField("forecast"));
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, PersonObject->GetStringField("forecast"));
+            //The property "object" that is retrieved from the given json file
+            TSharedPtr<FJsonObject> PropertiesObject = JsonObject->GetObjectField("properties");
 
-            url = PersonObject->GetStringField("forecast");
+            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, PropertiesObject->GetStringField("forecast"));
 
-        }
+            url = PropertiesObject->GetStringField("forecast");
+
+            //This url will lead us to the json file of forecast
+            TSharedRef<TJsonReader<TCHAR>> Reader2 = TJsonReaderFactory<>::Create(url);
+            
+            TSharedPtr<FJsonObject> JsonObject2;
+           // Reader = TJsonReaderFactory<>::Create(Reader->GetValueAsString);
+            if (FJsonSerializer::Deserialize(Reader2, JsonObject2))
+            {
+                TSharedPtr<FJsonObject> PersonObject = JsonObject2->GetObjectField("properties");
+                TSharedPtr<FJsonObject> PersonObject2 = PersonObject->GetObjectField("periods");
+                //Getting various properties
+                GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + FString(PersonObject2->GetStringField("temperature")));
+            }
     }
-    else
-
-    {
-        //TSharedRef<TJsonReader<TCHAR>> Reader2 = TJsonReaderFactory<>::Create(url);
-        if (FJsonSerializer::Deserialize(Reader, JsonObject2))
-        {
-            TSharedPtr<FJsonObject> PersonObject = JsonObject2->GetObjectField("periods");
-            //Getting various properties
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + FString(PersonObject->GetStringField("temperature")));
-        }
-    }
-   // request->SetURL(url);
+  
     
 }
 
+//Test for if the file is directly downloaded
 void AJSONActor::ParseExample()
 {
     const FString JsonFilePath = FPaths::ProjectContentDir() + "/JSONFiles/ChamplainForecast.json";

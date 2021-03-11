@@ -86,11 +86,12 @@ void AJSONActor::OnResponseReceivedForeCast(FHttpRequestPtr request, FHttpRespon
         if (FJsonSerializer::Deserialize(Reader, JsonObject))
         {
             TSharedPtr<FJsonObject> PersonObject = JsonObject->GetObjectField("properties");
-            //CLOSE now we have acess to to periods but need to figure out how to get inside
+            //Now access periods
             TSharedPtr<FJsonValue> PersonObject2 = *PersonObject->Values.Find("periods");
-         //   TSharedPtr<FJsonValue> PersonObject3 = PersonObject2->AsObject-
-            //Getting various properties
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + PersonObject2.Get()->AsString());//FString(PersonObject2->GetStringField("temperature")));
+            //periods has many elements, so just get the first one and then get stringfield of temperature
+            FString temp = PersonObject2->AsArray()[0]->AsObject()->GetStringField("temperature");
+            //Print
+            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + temp);//FString(PersonObject2->GetStringField("temperature")));
         }
         url.Empty();
     }

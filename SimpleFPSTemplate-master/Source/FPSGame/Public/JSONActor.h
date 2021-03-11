@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameEngine.h"
+#include "Runtime/Online/HTTP/Public/Http.h"
 #include "GameFramework/Actor.h"
 #include "JSONActor.generated.h"
 
@@ -16,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AJSONActor();
 
+	FHttpModule* Http;
+	FString url;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -23,6 +26,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//Make the API request
+	UFUNCTION()
+	void HttpCall();
+
+	void OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful);
 
 	void ParseExample();
 };

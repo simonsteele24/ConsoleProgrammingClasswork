@@ -34,7 +34,7 @@ void AJSONActor::HttpCall()
     TSharedRef<IHttpRequest, ESPMode::ThreadSafe> request = Http->CreateRequest();
     request->OnProcessRequestComplete().BindUObject(this, &AJSONActor::OnResponseReceived);
 
-    request->SetURL("https://api.weather.gov/points/44.4731,-73.2041");
+    request->SetURL("https://api.weather.gov/points/44.4759,-73.2121");
     request->SetVerb("GET");
     request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
     request->SetHeader("Content-Type", TEXT("application/json"));
@@ -85,13 +85,39 @@ void AJSONActor::OnResponseReceivedForeCast(FHttpRequestPtr request, FHttpRespon
     {
         if (FJsonSerializer::Deserialize(Reader, JsonObject))
         {
+            FJsonSerializableArray contentArray;
+
             TSharedPtr<FJsonObject> PersonObject = JsonObject->GetObjectField("properties");
             //Now access periods
             TSharedPtr<FJsonValue> PersonObject2 = *PersonObject->Values.Find("periods");
             //periods has many elements, so just get the first one and then get stringfield of temperature
             FString temp = PersonObject2->AsArray()[0]->AsObject()->GetStringField("temperature");
+            FString daytime = PersonObject2->AsArray()[0]->AsObject()->GetStringField("isDayTime");
+            FString windSpeedString = PersonObject2->AsArray()[0]->AsObject()->GetStringField("windSpeed");
+            //set string to wind direction
+            windDirection = PersonObject2->AsArray()[0]->AsObject()->GetStringField("windDirection");
+
+            //Parse through the string to find and split up from the spaces. Then just get the first part. 
+            // This means if there is a 6 to 10 mph, im going to focus on the 6.
+            TArray<FString> parsed; 
+            windSpeedString.ParseIntoArray(parsed, TEXT(" "), true);
+            windSpeedString = parsed[0];
+            //set windspeed
+            windSpeed = FCString::Atof(*windSpeedString);
+
+            //CHeck if it is daytime
+            if (daytime == "true")
+                isDayTime = true;
+            else
+                isDayTime = false;
+
+            //store temperature into float for use
+            temperature = FCString::Atof(*temp);//temp.
             //Print
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + temp);//FString(PersonObject2->GetStringField("temperature")));
+            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + temp);
+            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Daytime:" + isDayTime);
+            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Wind Speed:" + windSpeedString);
+            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Wind Direction:" + windDirection);
         }
         url.Empty();
     }

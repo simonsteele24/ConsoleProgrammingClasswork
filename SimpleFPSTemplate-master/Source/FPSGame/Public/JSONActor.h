@@ -19,6 +19,11 @@ public:
 
 	FHttpModule* Http;
 	FString url;
+	FString windDirection;
+	float temperature;
+	float windSpeed;
+	bool isDayTime;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,7 +36,7 @@ public:
 	UFUNCTION()
 	void HttpCall();
 	UFUNCTION()
-		void HttpCallURL(FString url);
+	void HttpCallURL(FString url);
 
 	void OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful);
 	void OnResponseReceivedForeCast(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful);

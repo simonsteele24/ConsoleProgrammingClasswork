@@ -107,17 +107,24 @@ void AJSONActor::OnResponseReceivedForeCast(FHttpRequestPtr request, FHttpRespon
 
             //CHeck if it is daytime
             if (daytime == "true")
+            {
                 isDayTime = true;
+                daytime = "false";
+            }
             else
+            {
                 isDayTime = false;
+                daytime = "false";
+            }
+             
 
             //store temperature into float for use
             temperature = FCString::Atof(*temp);//temp.
             //Print
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + temp);
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Daytime:" + isDayTime);
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Wind Speed:" + windSpeedString);
-            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Wind Direction:" + windDirection);
+            GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Temperature:" + temp); 
+            GEngine->AddOnScreenDebugMessage(2, 2.0f, FColor::Green, "Wind Speed:" + windSpeedString);
+            GEngine->AddOnScreenDebugMessage(3, 2.0f, FColor::Green, "Wind Direction:" + windDirection);
+            GEngine->AddOnScreenDebugMessage(4, 2.0f, FColor::Green, "Daytime:" + daytime);
         }
         url.Empty();
     }

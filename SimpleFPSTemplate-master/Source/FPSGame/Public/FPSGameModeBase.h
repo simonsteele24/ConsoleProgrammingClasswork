@@ -10,8 +10,6 @@
  * 
  */
 
-DECLARE_MULTICAST_DELEGATE(FRunningLow)
-
 UCLASS()
 class FPSGAME_API AFPSGameModeBase : public AGameModeBase
 {
@@ -22,12 +20,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	bool CheckIfBroadcastIsRequired();
+	
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int NumBeforeChange = 60;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	FRunningLow runningLowSignature;
 };

@@ -30,5 +30,5 @@ public:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 protected:
-    UPROPERTY() class AFPSGameModeBase* GameMode;
+    UPROPERTY() class AGameManagerActor* GameMode;
 };

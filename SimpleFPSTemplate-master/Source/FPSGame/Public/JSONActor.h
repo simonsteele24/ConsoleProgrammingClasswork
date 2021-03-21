@@ -38,6 +38,15 @@ public:
 	UFUNCTION()
 	void HttpCallURL(FString url);
 
+	UFUNCTION(BlueprintCallable)
+	bool GetDayTime() { return isDayTime; }
+
+	UFUNCTION(BlueprintCallable)
+	FString GetWindDirection() { return windDirection; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetWindSpeed() { return windSpeed; }
+
 	void OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful);
 	void OnResponseReceivedForeCast(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful);
 

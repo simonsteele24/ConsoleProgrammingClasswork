@@ -26,15 +26,18 @@ void AGameManagerActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+// Checks if all conditions are right for it to broadcast the message
 bool AGameManagerActor::CheckIfBroadcastIsRequired()
 {
+	// Get all cubes
 	TArray<AActor*> result;
-
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACube::StaticClass(), result);
 
+	// Return if cube number is less than the required amount to change
 	return result.Num() < NumBeforeChange;
 }
 
+// Broadcasts the new message to all deletegates that its time to switch materials
 void AGameManagerActor::BroadcastNewMessage() 
 {
 	runningLowSignature.Broadcast();

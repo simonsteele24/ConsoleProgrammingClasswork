@@ -23,14 +23,17 @@ protected:
 
 public:	
 
+	/* Integers */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int NumBeforeChange = 60;
 
+	/* Functions */
 	UFUNCTION(BlueprintCallable) bool CheckIfBroadcastIsRequired();
 	UFUNCTION(BlueprintCallable) void BroadcastNewMessage();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/* Event Handlers */
 	FRunningLow runningLowSignature;
 
 };

@@ -34,14 +34,16 @@ AFPSProjectile::AFPSProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
+// Adds a randomized explosion effectand destroys a given actor
 void AFPSProjectile::Explode(AActor* otherActor)
 {
-	float randomScale = FMath::RandRange(ExplosionSizeMinimum, ExplosionSizeMaximum);
-	UParticleSystemComponent * ps = UGameplayStatics::SpawnEmitterAtLocation(this, explosionTemplate, GetActorLocation());
-	ps->SetWorldScale3D(FVector(randomScale));
-	otherActor->Destroy();
+	float randomScale = FMath::RandRange(ExplosionSizeMinimum, ExplosionSizeMaximum); // Randomize explosion size
+	UParticleSystemComponent * ps = UGameplayStatics::SpawnEmitterAtLocation(this, explosionTemplate, GetActorLocation()); // Create particle emitter
+	ps->SetWorldScale3D(FVector(randomScale)); // Set the effect based on the randomized size
+	otherActor->Destroy(); // Destroy the other actor
 }
 
+// Event for when the projectile hits something
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
@@ -61,16 +63,18 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 
 			FActorSpawnParameters SpawnInfo;
 
+			// Create spawn parameters
 			ACube* baseActor = Cast<ACube>(OtherActor);
-
 			UStaticMesh* newMesh = baseActor->GetStaticMeshComponent()->GetStaticMesh();
 			FRotator Rotation = baseActor->GetActorRotation();
 			FVector baseLocation = baseActor->GetActorLocation();
 			FVector pieceLocation = FVector(0, 0, 0);
 			FVector baseScale = baseActor->GetActorScale3D() * .25;
 
+			// Destroy the other actor
 			OtherActor->Destroy();
 
+			// Split actor into seperate sections
 			for (int i = 0; i < 4; i++)
 			{
 				switch (i)
@@ -91,6 +95,7 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 					break;
 				}
 
+				// Spawn new actor with parameters
 				ACube* newActor = GetWorld()->SpawnActor<ACube>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
 				newActor->SetActorScale3D(baseScale);
 				newActor->SetMobility(EComponentMobility::Movable);
@@ -101,13 +106,6 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 				newActor->GetStaticMeshComponent()->SetMaterial(0, newActor->SmallMaterial);
 			}
 		}
-			///OtherComp->SetWorldScale3D(scale);
-
-
-		/*UMaterialInstanceDynamic* matInst = OtherComp->CreateAndSetMaterialInstanceDynamic(0);
-
-		if (matInst)
-			matInst->SetVectorParameterValue("Color", FLinearColor::MakeRandomColor());*/
 
 		//Destroy Projectile at the end
 		Destroy();

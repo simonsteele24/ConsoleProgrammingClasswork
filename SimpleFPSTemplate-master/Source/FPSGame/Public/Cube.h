@@ -18,17 +18,18 @@ class FPSGAME_API ACube : public AStaticMeshActor
 {
 	GENERATED_BODY()
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    UMaterial* SmallMaterial;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    UMaterial* DangerMaterial;
+    /* Materials */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) UMaterial* SmallMaterial;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) UMaterial* DangerMaterial;
 
-    UFUNCTION()
-    void ChangeToDanger();
+    /* Functions */
+    UFUNCTION() void ChangeToDanger();
 
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 protected:
+
+    /* Game Managers */
     UPROPERTY() class AGameManagerActor* GameMode;
 };

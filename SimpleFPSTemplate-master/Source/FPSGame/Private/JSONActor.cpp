@@ -15,11 +15,8 @@ AJSONActor::AJSONActor()
 // Called when the game starts or when spawned
 void AJSONActor::BeginPlay()
 {
-
 	Super::BeginPlay();
     HttpCall();
- 
-  //  ParseExample();
 }
 
 // Called every frame
@@ -29,6 +26,7 @@ void AJSONActor::Tick(float DeltaTime)
 
 }
 
+// Gets the weather api call
 void AJSONActor::HttpCall()
 {
     TSharedRef<IHttpRequest, ESPMode::ThreadSafe> request = Http->CreateRequest();
@@ -41,6 +39,7 @@ void AJSONActor::HttpCall()
     request->ProcessRequest();
 }
 
+// Gets the given url api based on string
 void AJSONActor::HttpCallURL(FString url)
 {
     TSharedRef<IHttpRequest, ESPMode::ThreadSafe> request = Http->CreateRequest();
@@ -53,7 +52,7 @@ void AJSONActor::HttpCallURL(FString url)
     request->ProcessRequest();
 }
 
-
+// Called if the http call was sucessful
 void AJSONActor::OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful)
 {
     TSharedPtr<FJsonObject> JsonObject;
@@ -76,6 +75,7 @@ void AJSONActor::OnResponseReceived(FHttpRequestPtr request, FHttpResponsePtr re
     }
 }
 
+// Called if the http call to the forecast was sucessful
 void AJSONActor::OnResponseReceivedForeCast(FHttpRequestPtr request, FHttpResponsePtr response, bool wasSuccessful)
 {
     TSharedPtr<FJsonObject> JsonObject;
@@ -156,16 +156,5 @@ void AJSONActor::ParseExample()
         GLog->Log("ITWORKS! generatedAt:" + PersonObject->GetStringField("generatedAt"));
         GLog->Log("updateTime:" + PersonObject->GetStringField("updateTime"));
         GLog->Log("validTimes:" + PersonObject->GetStringField("validTimes"));
-/*
- "updated": "2021-03-10T17:15:16+00:00",
-        "units": "us",
-        "forecastGenerator": "BaselineForecastGenerator",
-        "generatedAt": "2021-03-10T18:54:10+00:00",
-        "updateTime": "2021-03-10T17:15:16+00:00",
-        "validTimes": "2021-03-10T11:00:00+00:00/P7DT14H",
-*/
-     //   FString ExampleString = JsonParsed->GetStringField((JsonRaw));
-       // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, ExampleString);
-      //  JsonParsed->GetStringField(JsonRaw);
     }
 }

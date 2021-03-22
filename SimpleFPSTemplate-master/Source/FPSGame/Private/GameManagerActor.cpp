@@ -3,7 +3,7 @@
 
 #include "GameManagerActor.h"
 #include "Kismet/GameplayStatics.h"
-#include "Cube.h"
+#include "Engine/StaticMeshActor.h"
 
 // Sets default values
 AGameManagerActor::AGameManagerActor()
@@ -31,7 +31,7 @@ bool AGameManagerActor::CheckIfBroadcastIsRequired()
 {
 	// Get all cubes
 	TArray<AActor*> result;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACube::StaticClass(), result);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStaticMeshActor::StaticClass(), result);
 
 	// Return if cube number is less than the required amount to change
 	return result.Num() < NumBeforeChange;

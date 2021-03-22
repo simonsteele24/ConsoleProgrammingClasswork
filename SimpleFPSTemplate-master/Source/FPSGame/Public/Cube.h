@@ -11,7 +11,7 @@
  * 
  */
 
-DECLARE_MULTICAST_DELEGATE(FRunningLow)
+
 
 UCLASS()
 class FPSGAME_API ACube : public AStaticMeshActor
@@ -30,6 +30,5 @@ public:
     virtual void BeginPlay() override;
 protected:
 
-    /* Game Managers */
-    UPROPERTY() class AGameManagerActor* GameMode;
+   
 };

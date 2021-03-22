@@ -15,11 +15,5 @@ void ACube::ChangeToDanger()
 
 void ACube::BeginPlay() 
 {
-	// Get and set the game mode actor
-	TArray<AActor*> result;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGameManagerActor::StaticClass(), result);
-	GameMode = Cast<AGameManagerActor>(result[0]);
-
-	// Add object as a listener to the multicast delegate
-	GameMode->runningLowSignature.AddUObject(this, &ACube::ChangeToDanger);
+	
 }

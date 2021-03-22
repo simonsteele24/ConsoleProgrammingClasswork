@@ -63,18 +63,16 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 
 			FActorSpawnParameters SpawnInfo;
 
-			// Create spawn parameters
-			ACube* baseActor = Cast<ACube>(OtherActor);
+			AStaticMeshActor* baseActor = Cast<AStaticMeshActor>(OtherActor);
+
 			UStaticMesh* newMesh = baseActor->GetStaticMeshComponent()->GetStaticMesh();
 			FRotator Rotation = baseActor->GetActorRotation();
 			FVector baseLocation = baseActor->GetActorLocation();
 			FVector pieceLocation = FVector(0, 0, 0);
 			FVector baseScale = baseActor->GetActorScale3D() * .25;
 
-			// Destroy the other actor
 			OtherActor->Destroy();
 
-			// Split actor into seperate sections
 			for (int i = 0; i < 4; i++)
 			{
 				switch (i)
@@ -95,18 +93,16 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 					break;
 				}
 
-				// Spawn new actor with parameters
-				ACube* newActor = GetWorld()->SpawnActor<ACube>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
+				AStaticMeshActor* newActor = GetWorld()->SpawnActor<AStaticMeshActor>(OtherActor->GetClass(), pieceLocation, Rotation, SpawnInfo);
 				newActor->SetActorScale3D(baseScale);
 				newActor->SetMobility(EComponentMobility::Movable);
 				newActor->GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 				newActor->GetStaticMeshComponent()->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
 				newActor->GetStaticMeshComponent()->SetSimulatePhysics(true);
 				newActor->GetStaticMeshComponent()->SetStaticMesh(newMesh);
-				newActor->GetStaticMeshComponent()->SetMaterial(0, newActor->SmallMaterial);
+				newActor->GetStaticMeshComponent()->SetMaterial(0, SmallMaterial);
 			}
 		}
-
 		//Destroy Projectile at the end
 		Destroy();
 	}

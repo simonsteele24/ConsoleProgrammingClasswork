@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Materials/Material.h"
 #include "FPSProjectile.generated.h"
 
 
@@ -47,6 +48,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Boom")
 	float ExplosionSizeMaximum;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Boom")
+	UMaterial * SmallMaterial;
 
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }

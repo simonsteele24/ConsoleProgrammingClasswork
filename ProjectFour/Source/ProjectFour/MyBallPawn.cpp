@@ -29,6 +29,5 @@ void AMyBallPawn::Tick(float DeltaTime)
 void AMyBallPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 

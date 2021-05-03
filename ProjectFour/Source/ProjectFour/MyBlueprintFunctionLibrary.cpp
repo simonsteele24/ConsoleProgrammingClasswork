@@ -11,19 +11,21 @@ void UMyBlueprintFunctionLibrary::PlayerEffect(UObject* object,Boosts type)
 		switch (type)
 		{
 		case Boosts::SPEED:
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Speed"));
-			if (ballPawn->currentBallSpeed < ballPawn->boostedSpeed)
+			if (!ballPawn->speedBoosted)
 			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Speed"));
 				ballPawn->currentBallSpeed = ballPawn->boostedSpeed;
 			}
+			
 			break;
 
 		case Boosts::JUMP:
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));
-			if (ballPawn->currentJumpForce < ballPawn->boostedJumpForce)
+			if (!ballPawn->jumpBoosted)
 			{
-				ballPawn->currentBallSpeed = ballPawn->boostedSpeed;
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));
+				ballPawn->currentJumpForce = ballPawn->boostedJumpForce;
 			}
+		
 			break;
 
 		case Boosts::CONTROL:

@@ -8,13 +8,17 @@ AMyPlayerController::AMyPlayerController()
 {
 }
 
+void AMyPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 void AMyPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 		
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AMyPlayerController::Jump);
-	InputComponent->BindAction("SpeedBoost", IE_Pressed, this, &AMyPlayerController::ActivateSpeedBoost);
-}
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AMyPlayerController::Jump);}
 
 void AMyPlayerController::SetPlayerDataToController(AMyBallActor* myActor, AMyBallPawn* myPawn)
 {
@@ -44,8 +48,11 @@ void AMyPlayerController::ActivateSpeedBoost()
 {
 	//Player
 	UMyBlueprintFunctionLibrary::PlayerEffect(ballPawn, Boosts::SPEED);
+	ballPawn->speedBoosted = true;
 }
 
 void AMyPlayerController::ActivateJumpBoost()
 {
+	UMyBlueprintFunctionLibrary::PlayerEffect(ballPawn, Boosts::JUMP);
+	ballPawn->jumpBoosted = true;
 }

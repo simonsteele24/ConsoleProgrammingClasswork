@@ -22,14 +22,21 @@ class PROJECTFOUR_API AMyPlayerController : public APlayerController
 public:
 	// Sets default values for this pawn's properties
 	AMyPlayerController();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AMyBallPawn* ballPawn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AMyBallActor* ballActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* ballMeshComponent;
+
 	// Called to bind functionality to input
 	virtual void SetupInputComponent() override;
+
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerDataToController(AMyBallActor* myActor,AMyBallPawn* myPawn);
 protected:
@@ -41,13 +48,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "PlayerBoost")
 		void ActivateJumpBoost();
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "PlayerBoostBools")
-	bool speedBoost = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerBoostBools")
-	bool jumpBoost = false;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Player Actions")
 	void Jump();
 };

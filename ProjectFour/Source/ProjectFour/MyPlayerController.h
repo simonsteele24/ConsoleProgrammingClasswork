@@ -51,4 +51,10 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, Category = "Player Actions")
 	void Jump();
+
+	UFUNCTION(BlueprintCallable, Category = "Player Actions")
+	void MoveForward(float input);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Actions")
+	void MoveRight(float input);
 };

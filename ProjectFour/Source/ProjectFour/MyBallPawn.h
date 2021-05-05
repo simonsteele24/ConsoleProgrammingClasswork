@@ -24,7 +24,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	FVector GetCameraRightVector() { return NewCamera->GetRightVector(); }
+	FVector GetCameraForwardVector() { return NewCamera->GetForwardVector(); }
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

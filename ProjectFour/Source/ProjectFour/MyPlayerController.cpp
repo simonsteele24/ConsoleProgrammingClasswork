@@ -21,6 +21,8 @@ void AMyPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AMyPlayerController::Jump);
 	InputComponent->BindAxis("MoveForward", this, &AMyPlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AMyPlayerController::MoveRight);
+	InputComponent->BindAxis("LookUp", this, &AMyPlayerController::ChangeVerticalCameraInput);
+	InputComponent->BindAxis("Turn", this, &AMyPlayerController::ChangeHorizontalCameraInput);
 }
 
 void AMyPlayerController::SetPlayerDataToController(AMyBallActor* myActor, AMyBallPawn* myPawn)
@@ -74,4 +76,14 @@ void AMyPlayerController::MoveRight(float input)
 	{
 		ballMeshComponent->AddForce(ballPawn->currentBallSpeed * UGameplayStatics::GetWorldDeltaSeconds(GetWorld()) * input * FVector(ballPawn->GetCameraRightVector().X, ballPawn->GetCameraRightVector().Y, 0));
 	}
+}
+
+void AMyPlayerController::ChangeHorizontalCameraInput(float input) 
+{
+	ballPawn->AddControllerYawInput(input);
+}
+
+void AMyPlayerController::ChangeVerticalCameraInput(float input)
+{
+	ballPawn->AddControllerPitchInput(input);
 }

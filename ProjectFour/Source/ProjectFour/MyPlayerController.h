@@ -57,4 +57,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Player Actions")
 	void MoveRight(float input);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Actions")
+	void ChangeHorizontalCameraInput(float input);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Actions")
+	void ChangeVerticalCameraInput(float input);
 };

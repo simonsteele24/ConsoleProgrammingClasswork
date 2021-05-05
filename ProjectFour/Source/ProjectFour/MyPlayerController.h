@@ -18,7 +18,7 @@ UCLASS()
 class PROJECTFOUR_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
 public:
 	// Sets default values for this pawn's properties
 	AMyPlayerController();

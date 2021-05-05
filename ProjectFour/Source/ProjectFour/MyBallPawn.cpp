@@ -9,6 +9,13 @@ AMyBallPawn::AMyBallPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+
+	NewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("NewCamera"));
+	NewCamera->SetupAttachment(CameraBoom);
 }
 
 // Called when the game starts or when spawned
